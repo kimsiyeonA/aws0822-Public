@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>자바스크립트 변수 학습하기</title>
+<script>
+let x ;
+// 전역 변수 x 선언
+function f(){
+	let y;
+	// f() 함수 안에서 지역 변수 y선언
+	
+	x = 10;
+	// 지역변수 x에 10의 값을 넣음
+	y = 20;
+	// 전역변수 y에 20의 값을 넣음
+	z = 30;
+	// 선언되지 않은 변수는 지역변수로 사용됨
+	
+	if(y == 20){
+		let b = 40;
+		// if문에서 사용되는 블록 변수 if문 안에서만 사용됨
+		b++;
+		// b 변수에  +1
+		document.write("b의 값은?" + b);
+		document.write("<br>");
+		// 블록변수 값 확인
+	}
+	document.write("y의 값은?" + y);
+	// 지역변수 값 확인
+}
+
+f(); // 함수 호출
+document.write("<br>");
+document.write("x의 값은?" + x);
+document.write("<br>");
+document.write("z의 값은?" + z);
+document.write("y의 값은?" + y);
+// 전역변수 값 확인// 전역변수 안에 할당된 변수는 실행해도 적용이 되지 않음
+// 검사를 눌러보면 y값에 대해서 오류가 난 것을 확인할 수 있음
+</script>
+</head>
+<body>
+
+</body>
+</html>

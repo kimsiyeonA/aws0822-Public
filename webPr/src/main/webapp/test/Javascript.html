@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script > // type = " text/javascrpit"글자가 스크립트라고 지정해줘야하는데 브라우저에서 자동으로 자바스크립트로 인식함
+document.write("안녕하세요");
+// alert("경고창을 띄웁니다");
+document.write("<p style = 'font-size : 30px; color : red;'> 글자크기 30px</p>");
+document.write("<a href = 'http://naver.com'> 네이버 가기 </a>");
+document.write("<br>")
+document.write("<a href = \"javascript:alert('클릭했나요?');\"> 클릭 </a>");
+/*
+prompt("이름을 입력하세요")
+if(value == null){
+	document.write("null입니다.")
+}else if(value == ""){
+	document.write ("빈값입니다.")
+}else{
+	document.write (value)
+}
+*/
+let val = confirm("전송할까요?")
+
+if(val == true){
+	document.write ("네")
+}else{
+	document.write ("아니오")
+}
+/*
+문서 객체를 실행할 때 참조변수처럼 도큐먼트로 정의함 
+실행하는 문서객체에 롸이트 함수를 만들어놓음
+*/
+</script>
+</head>
+<body>
+<h3> 마우스를 올려보세요 </h3>
+<hr>
+<img src = "../img/apple.png" 
+	onmouseover = "this.src='../img/banana.png'"
+	onmouseout = "this.src = '../img/apple.png'">
+
+</body>
+</html>

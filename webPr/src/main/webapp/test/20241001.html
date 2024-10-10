@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>if문, for문</title>
+</head>
+<body>
+<script>
+/*
+-- 문제
+영어점수가 90점 이상이면 A
+점수가 80점 이상이면 B
+점수가 70점 이상이면 C
+점수가 60점 이상이면 D
+점수가 60점 미만이면 F
+라고 출력하는 구문을 만들고 영어점수 변수는 eng이다.
+구문완성하시오
+*/
+/*
+let eng;
+
+eng = prompt("점수를 입력하세요."); // Scanner 같은 느김
+// 입력할 수 있는 화면창을 받고 입력해서 변수로 받게함
+// 취소, 없는 값 => f
+
+if(eng >= 90){
+	document.write("A");
+}else if(eng >= 80){
+	if(eng < 90){
+		document.write("B");
+	}
+}else if(eng >= 70){
+	if(eng < 80){
+		document.write("C");
+	}
+}else if(eng >= 60){
+	if(eng < 70){
+		document.write("D");
+	}
+}else {
+	document.write("f");
+}
+
+//-- 풀이
+if(eng >= 90){ // 조건이 참이면 구문이 끝남
+	document.write("A");
+}else if(eng >= 80){
+		document.write("B");
+}else if(eng >= 70){
+		document.write("C");
+}else if(eng >= 60){
+		document.write("D");
+}else {
+	document.write("f");
+}
+*/
+// 조건식 2 switch문
+/*
+ * 수학점수 math가 90이면 우수
+ 수학점수가 80점이면 보통
+ 수학점수가 70점이면 미흡
+ 수학점수가 60점이면 저조
+ 수학점수가 
+ */
+
+ /*
+switch(){
+case 값 :
+
+case 값 :
+	
+case 값 :
+	
+default:
+	
+}
+*/
+/*
+let math = prompt("수학 점수를 입력해주세요.","")
+switch(math){
+case "90" :
+	document.write("우수");
+case "80" :
+	document.write("보통");
+case "70" :
+	document.write("미흡");
+case "60":
+	document.write("저조");
+default:
+	document.write("모름");
+}
+*/
+// break;를 만날 때까지 아래로 실행
+// 입력한 요일에 따라서 정상영업인지 아닌지를 출력하세요.
+/*
+ * 월~금 : 정상영업, 토~일 : 휴무
+ */
+/*
+ let day; // 통합변수선언
+ day = prompt("요일을 입력하세요.","");
+ 
+ switch(day){
+ 
+ case "월":
+		document.write("정상영업");
+		break;
+ case "화":
+		document.write("정상영업");
+		break;
+ case "수":
+		document.write("정상영업");
+		break;
+ case "목":
+		document.write("정상영업");
+		break;
+ case "금":
+	document.write("정상영업");
+	break;
+ case "토":
+	document.write("휴무");
+	break;
+ case "일":
+	document.write("휴무");
+	break;
+ default :
+		
+ }
+
+  // 통합변수선언
+ day = prompt("요일을 입력하세요.","");
+ 
+ switch(day){
+ 
+ case "월":
+ case "화":
+ case "수":
+ case "목":
+ case "금":
+	document.write("정상영업");
+	break;
+ case "토":
+ case "일":
+	document.write("휴무");
+	break;
+ default :
+	 document.write("모름");
+ }
+ */
+ // for문 학습하기
+ // 형식
+ /*
+ for(초기식;조건식;증가식){
+	 
+ }
+ */
+ // 1에서 10까지의 수를 출력하세요.
+ for(let i = 0; i <= 10; i++){
+	 document.write(i);
+	 document.write("<br>");
+ }
+ //1에서 11까지 합을 구해서 결과를 출력해주세요.
+ 
+ let sum = 0
+ 
+ for(let i = 0; i <= 11; i++ ){
+	 sum += i
+ }
+ document.write(sum)
+ 
+ 
+ // while 이용해서 반복문 만들기
+ // 형식 
+ /*
+ 초기식
+ while (조건식){
+	 
+	 증가식
+ }
+ */
+ 
+ let total2 = 0;
+ let i = 0
+ while (i <= 10){
+	 total2 += 1
+	 i++;
+ }
+ document.write("<br>")
+ document.write("while문을 이용한 합 : "+total2)
+ 
+ // 1에서 100까지의 수중에 홀수의 합을 구하시오
+ let total3 = 0;
+ i = 0
+ while (i <= 100){
+	 if(i % 2 != 0){
+		 total3 += i 
+	 }
+	 i++;
+ }
+ 
+ document.write("<br>")
+ document.write("while문을 1~100 홀수의 합 : "+total2)
+ 
+ // 반복문 3번째 do while 문
+ // 형식
+ /*
+ 초기식
+ do{
+	 증가식; -> 증가식 영역이 위로 올라감 (수행하다)
+ }while(조건식);
+ */
+ // 일단 한번은 수행하고 조건식을 수행하세요. 라는 뜻
+ 
+ // 1에서 10까지의 수를 출력하세요.
+ let k = 0;
+do{
+	document.write("<br>")
+	document.write("순서번호 입니다."+k)
+	k++;
+}while(k < 0);
+// while문 조건이 안맞아도 do는 실행됨
+// 이중 for문 사용하기 : for문 안에 랙문이 존재한다.
+/*
+for(초기식;조건식;증가식){
+	for(초기식;조건식;증가식){
+		
+	}
+}
+*/
+document.write("<br>")
+for(let i = 0; i < 5; i++){
+	for(let k = 0; k <i+1; k++){
+		document.write("*")
+	}
+	document.write("<br>")
+}
+
+/*
+ i값    j값
+ 0      0
+ 1      0,1
+ 2      0,1,2
+ 3      0,1,2,3
+ 4      0,1,2,3,4
+ */
+ for(let i = 0; i < 5; i++){
+		for(let m = 4-i; m > 0 ; m--){
+			document.write("ㅁ")
+		}
+	 	for(let k = 0; k <i+1; k++){
+			document.write("☆")
+		}
+	 	for(let k = 0; k <i; k++){
+			document.write("☆")
+		}
+		document.write("<br>")
+	}
+/*
+ i값  k값j값
+ 0     ㅁㅁㅁㅁㅁ0
+ 1     ㅁㅁㅁㅁ0,1,2
+ 2     ㅁㅁㅁ0,1,2,3,4
+ 3     ㅁㅁ0,1,2,3,4,5,6
+ 4     ㅁ0,1,2,3,4,5,6,7,8
+ */
+ 
+//break 진행 멈추기 continue 건너뛰기
+// 1에서 10까지의 수중에 홀수의 합을 구하시오. contine를 사용해서
+
+let q = 0
+for(let i = 0; i <= 10 ; i++){
+	if(i % 2 == 0){
+		continue // ☆
+	}
+	q = q + i	
+}
+
+document.write (q)
+
+document.write ("<br>")
+ q = 0
+for(let i = 0; i <= 10 ; i++){
+	if(i % 2 != 0){
+		q = q + i	
+	}
+}
+document.write (q)
+
+// 자바스크립트 == 함수 == function
+// 함수 만드는 방법
+/* 1. 형식부터 만들어놓는다.
+ * 
+ */
+ q = 0
+ function oddHap(){
+	// 홀수의 합을 구하는 구하는 함수를 만드세요.
+	for(let i = 0; i <= 10 ; i++){
+		if(i % 2 != 0){
+			q = q + i	;
+		}
+	}
+	return q ;
+}
+ 
+oddHap();
+
+
+document.write(typeof num);
+
+</script>
+
+</body>
+</html>
