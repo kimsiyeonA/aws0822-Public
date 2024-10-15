@@ -33,7 +33,6 @@ function check3(){
 	}else if(fm.memberpwd2.value == ""){
 		alert("비밀번호 확인을 입력해주세요");
 		fm.memberpwd2.focus(); 
-		
 		return;
 	}else if(fm.memberpwd.value != fm.memberpwd2.value){
 		alert("비밀번호가 일치하지 않습니다.");

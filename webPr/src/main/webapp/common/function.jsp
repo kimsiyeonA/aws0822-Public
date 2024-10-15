@@ -16,7 +16,7 @@
 			sql = "insert into member(memberid,memberpwd,membername,membergender,"
 				 +"memberbirth,memberaddr,memberphone,memberemail,memberhobby) "
 				 +"values(?,?,?,?,?,?,?,?,?)";
-				 pstmt =conn.prepareStatement(sql);
+				 pstmt=conn.prepareStatement(sql);
 				 pstmt.setString(1,memberId);		// 문자형 메소드 사용
 				 pstmt.setString(2,memberPwd);		// 문자형 메소드 사용 숫자형 setInt(번호, 값);
 				 pstmt.setString(3,memberName);
