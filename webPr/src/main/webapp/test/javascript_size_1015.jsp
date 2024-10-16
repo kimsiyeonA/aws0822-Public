@@ -127,7 +127,7 @@ function autoScroll(){
 습<br>
 니<br>
 다.<br>
-
+<a href="http://localhost/webPr/test/javascript_history_1016.jsp">이동</a>
 </body>
 
 </html>
