@@ -31,7 +31,7 @@ public class FrontController extends HttpServlet {
 		}else if (entity[1].equals("board")) {
 			BoardController bc = new BoardController(entity[2]);
 			bc.doGet(request, response);
-			
+			//System.out.println(entity[2]);
 		}
 		
 	}
