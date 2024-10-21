@@ -4,7 +4,9 @@
 <%@ page import="mvc.vo.*"  %>    
 <%
 ArrayList<BoardVo> alist = (ArrayList<BoardVo>)request.getAttribute("alist");
-System.out.println("alist : "+alist);
+//System.out.println("alist : "+alist);
+PageMaker pm = (PageMaker)request.getAttribute("pm");
+
 %>
 <!DOCTYPE html>
 <html>
@@ -56,21 +58,45 @@ button{
 div.C{
 	text-align: center;
 }
-span{
+.C span{ 
 padding-top:5px;
 text-align: center;
 display:inline-block;
     width:30px;
 	height: 30px;
+	text-decoration: none;
+	
 }
-span:hover {
+.C span:active {
    padding-top:5px;
    display:inline-block;
     width:30px;
 	height: 30px;
 	background: black;
 	color : white;
+	text-decoration: none;
 }
+
+.C span a{ 
+padding-top:5px;
+text-align: center;
+display:inline-block;
+    width:30px;
+	height: 30px;
+	text-decoration: none;
+	color: inherit;
+	
+}
+.C span a:active, .C .on {
+    padding-top:5px;
+    display:inline-block;
+    width:30px;
+	height: 30px;
+	background: black;
+	color : white;
+	text-decoration: none;
+}
+
 </style>
 </head>
 <body>
@@ -111,18 +137,20 @@ span:hover {
 <button type="button" class="btn">글쓰기</button>
 </a>
 </div>
-<div class="C">
-<span>1</span>
-<span>2</span>
-<span>3</span>
-<span>4</span>
-<span>5</span>
-<span>6</span>
-<span>7</span>
-<span>8</span>
-<span>9</span>
-<span>10</span>
-</div>
+	<div class="C">
+	<% if(pm.isPrev()==true){ %>	
+	<span><a href="<%=request.getContextPath()%>/board/boardList.aws?page=<%=pm.getStartPage()-1%>">◀</a></span>
+	<%}%>	
+	<% for(int i = pm.getStartPage(); i<=pm.getEndPage();i++){ %>	
+	<span <%if(i==pm.getCri().getPage()){%>class="on"<%}%>>
+	<a href="<%=request.getContextPath() %>/board/boardList.aws?page=<%=i%>"> <%=i %></a></span>
+	<%}%>	
+	<span>
+	<% if(pm.isNext()==true && pm.getEndPage()>0){ %>	
+	<a href="<%=request.getContextPath()%>/board/boardList.aws?page=<%=pm.getEndPage()+1%>">▶</a>
+	<%}%>	
+	</span>
+	</div>
 </section>
 </body>
 </html>

@@ -45,6 +45,7 @@ button.C{
 	background: black;
 	color : white;
 	margin-left: 9%;
+	float: right;
 }
 div.C.a{
 	width:20%; 

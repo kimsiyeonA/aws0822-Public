@@ -54,11 +54,22 @@ function check1(){
 		alert("작성자를 입력해주세요");
 		fm.writer.focus(); 
 		return;
-	}else if(fm.writer.value != "" && fm.boardbody.value != ""&& fm.writer.value != ""){
-		alert("저장하시겠습니까");
+	}else if(fm.boardpwd.value == ""){
+		alert("비밀번호를 입력해주세요");
+		fm.boardpwd.focus(); 
 		return;
-	}
+	}//else if(fm.writer.value != "" && fm.boardbody.value != ""&& fm.writer.value != ""){
+	//	alert("저장하시겠습니까");
+	//	return;
+	//}
 
+	let ans = confirm("저장하시겠습니까?")//함수의 값을 참과 거짓 true, false로 나눈다.
+	
+	if(ans == true){
+		fm.action="<%=request.getContextPath()%>/board/boardWriteAction.aws";
+		fm.method="post";
+		fm.submit();
+	}
 	return;
 }
 
@@ -82,7 +93,7 @@ function check2(){
 	</tr>
 	<tr>
 		<td>내용</td>
-		<td><input type = "text"  name="boardbody" style = "width:700px; height: 15rem;" ></td>
+		<td><textarea  name="boardbody" style = "width:700px; height: 15rem;" ></textarea></td>
 	</tr>
 	<tr>
 		<td >작성자</td>
@@ -107,7 +118,7 @@ function check2(){
 	<button type = "button" name="btn1" onclick="check1();">
 	저장
 	</button>
-	<button type = "button" name="btn2" onclick="check2();">
+	<button type = "button" name="btn2" onclick="history.back();">
 	취소
 	</button>
 	</div>
