@@ -20,7 +20,7 @@ public class Dbconn {
 			e.printStackTrace();
 		}  
 
-		 System.out.println("객체 생성 연결 확인==> "+conn);
+		 //System.out.println("객체 생성 연결 확인==> "+conn);
 		 return conn; 
 		 // 연결 객체가 생성되었을 때의 객체정보를 담고있는 객체 참조 변수 , 
 		 // null이면 연결객체가 생성되지 않았다 mysql과 연결할 수 없음

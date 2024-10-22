@@ -1,5 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+     <%@page import="mvc.vo.BoardVo" %>
+ <% 
+
+ BoardVo bv = (BoardVo)request.getAttribute("bv");
+ %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,21 +47,30 @@ function check1(){
 
 	var fm = document.frm;
 	
-	if (fm.boardtitle.value == ""){
+	if (fm.subject.value == ""){
 		alert("제목을 입력해주세요");
-		fm.boardtitle.focus(); 
+		fm.subject.focus(); 
 		return;
-	}else if(fm.boardbody.value == ""){
+	}else if(fm.contents.value == ""){
 		alert("내용을 입력해주세요");
-		fm.boardbody.focus(); 
+		fm.contents.focus(); 
 		return;
 	}else if(fm.writer.value == ""){
 		alert("작성자를 입력해주세요");
 		fm.writer.focus(); 
 		return;
-	}else if(fm.writer.value != "" && fm.boardbody.value != ""&& fm.writer.value != ""){
-		alert("저장하시겠습니까");
+	}else if(fm.password.value  == ""){
+		alert("비밀번호를 입력해주세요");
+		fm.password.focus(); 
 		return;
+	}
+	
+	let ans = confirm("저장하시겠습니까?")
+	
+	if(ans==true){
+		fm.action="<%=request.getContextPath()%>/board/boardModifyAction.aws";
+		fm.method="post"
+		fm.submit();
 	}
 
 	return;
@@ -75,25 +89,26 @@ function check2(){
 <hr>
 <section>
 	<form name="frm">
+	<input type="hidden" name="bidx" value="<%=bv.getBidx() %>">
 	<table>
 	<tr>
 		<td >제목</td>
-		<td> <input type = "text" name="boardtitle" style = "width:700px; height: 2rem;"></td>
+		<td> <input type = "text" name="subject" style = "width:700px; height: 2rem;" value="<%=bv.getSubject() %>"></td>
 	</tr>
 	<tr>
 		<td>내용</td>
-		<td><input type = "text"  name="boardbody" style = "width:700px; height: 15rem;" ></td>
+		<td><textarea  name="contents" style = "width:700px; height: 15rem;" ><%=bv.getContents() %></textarea></td>
 	</tr>
 	<tr>
 		<td >작성자</td>
 		<td class = "A">
-		<input type = "text" name="writer" maxlength = "10" style = "width:100px; height: 1rem;" >
+		<input type = "text" name="writer" maxlength = "10" style = "width:100px; height: 1rem;" value="<%=bv.getWriter()%>">
 		</td>
 	</tr>
 	<tr>
 		<td class = "idcolor">비밀번호</td>
 		<td class = "A">
-		<input type = "text"  name="boardpwd" maxlength = "50" style = "width:100px; height: 1rem;" >
+		<input type = "password"  name="password" maxlength = "50" style = "width:100px; height: 1rem;" >
 		</td>
 	</tr>
 	<tr>

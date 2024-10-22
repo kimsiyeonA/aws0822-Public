@@ -1,5 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ <%@page import="mvc.vo.BoardVo" %>
+ <% 
+ BoardVo bv = (BoardVo)request.getAttribute("bv");
+ // request.getAttribute();는 object로 되므로 BoardVo으로 강제 형변환 시켜준다.
+//System.out.println("boardSelectOne bvbv" + bv);
+ %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -92,7 +98,11 @@ table{
 	 padding : 5px;
 	 
 	}
-
+a{ 
+	text-decoration: none;
+	color: none;
+	
+}
 </style>
 
 <script>
@@ -146,34 +156,42 @@ function check6(){
 </head>
 <body>
 	<form name="frm">
+
 <hr style="border: 2px solid black;">
 <div>
 <div>
-<h3>장애학생들을 위한 특별한 피아노(조회수:7)</h3>
-관리자(2024-10-12)
+<h3><%=bv.getSubject() %>(조회수:<%=bv.getViewcnt() %>)</h3>
+<%=bv.getWriter() %>(<%=bv.getWriterday() %>)
 </div>
 <hr>
 <div>
-link : <a href="#">http://www.naver.com/</a>
+<!--  link : <a href="#">http://www.naver.com/</a>>-->
 <p>
-블록 코딩을 이용해 센서피아노를 만드는 수업입니다. 
-선생님 설명을 따라 코딩값을 입력하고, 빨간 버튼을 누르자 스피커에서 음악이 흘러나옵니다. (인터뷰) 현은진/학성여고 3학년 '실제 피아노는 건반도 많고 손을...
+
+<%=bv.getContents() %>
+<!--블록 코딩을 이용해 센서피아노를 만드는 수업입니다. 
+선생님 설명을 따라 코딩값을 입력하고, 빨간 버튼을 누르자 스피커에서 음악이 흘러나옵니다. (인터뷰) 현은진/학성여고 3학년 '실제 피아노는 건반도 많고 손을...-->
 </p>
 </div>
 <hr>
 <div>
+<%if(bv.getFilename() != null){ %>
 	<button type = "button" class="A" name="btn2" onclick="check1();">
-	<img src = "../img/save.png">
+	<img src = "<%=bv.getFilename()%>">
 	</button>
+<%} %>
 </div>
 </div>
 <hr style="border: 2px solid black;">
 
 
 <div class="B">
+	<a href="<%=request.getContextPath() %>/board/BoardUpdate.aws?bidx=<%=bv.getBidx() %>">
 	<button type = "button" class="B"  name="btn2" onclick="check2();">
 	수정
 	</button>
+	</a>
+	
 	<button type = "button" class="B" name="btn2" onclick="check3();">
 	삭제
 	</button>

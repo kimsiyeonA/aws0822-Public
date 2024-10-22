@@ -77,6 +77,11 @@ display:inline-block;
 	text-decoration: none;
 }
 
+a{ 
+	text-decoration: none;
+	color: black;
+	
+}
 .C span a{ 
 padding-top:5px;
 text-align: center;
@@ -124,7 +129,7 @@ display:inline-block;
 	<%for(BoardVo bv : alist){ %>
 		<tr>
 			<td><%=bv.getBidx() %></td>
-			<td><%=bv.getSubject() %></td>
+			<td><a href="<%=request.getContextPath()%>/board/boardContents.aws?bidx=<%=bv.getBidx()%>"><%=bv.getSubject() %></a></td>
 			<td><%=bv.getWriter() %></td>
 			<td><%=bv.getViewcnt() %></td>
 			<td><%=bv.getWriterday() %></td>
