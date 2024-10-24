@@ -122,6 +122,7 @@ display:inline-block;
 		<th>제목</th>
 		<th>작성자</th>
 		<th>조회</th>
+		<th>추천</th>
 		<th>날짜</th>
 	</tr>
 	</thead>
@@ -132,7 +133,8 @@ display:inline-block;
 			<td><a href="<%=request.getContextPath()%>/board/boardContents.aws?bidx=<%=bv.getBidx()%>"><%=bv.getSubject() %></a></td>
 			<td><%=bv.getWriter() %></td>
 			<td><%=bv.getViewcnt() %></td>
-			<td><%=bv.getWriterday() %></td>
+			<td><%=bv.getRecom() %></td>
+			<td><%=bv.getWriterday().substring(0,10) %></td>
 		</tr>
 	<%}%>
 	</tbody>

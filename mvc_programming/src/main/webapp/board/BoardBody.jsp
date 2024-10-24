@@ -11,6 +11,7 @@
 <head>
 <meta charset="UTF-8">
 <title>글내용</title>
+<script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <style>
 html{
 	width:100%;
@@ -152,6 +153,32 @@ function check6(){
 	}
 	
 }
+
+$(document).ready(function(){
+	$("#btn").click(function(){
+		alert("추천버튼 클릭")
+		
+		$.ajax({
+			type : "get", // 전송 방식을 무엇으로 할지
+			url : "<%=request.getContextPath()%>/board/boardRecom.aws?bidx=<%=bv.getBidx()%>", 
+					// 넘기는 주소
+			dataType : "json", //json타입은 문서에서 {"키값":"value값","키값2":"value2값"}
+			//data : {"memberId" : memberId},get 방식아라서 물음포 달고 가니깐 안써도 됨
+			success : function(result){//결과가 넘어와서 성공했을 때 받는 영역
+				//alert("길이는"+result.length);
+				//alert("cnt값은"+result.cnt)
+				var str = "추천("+result.recom+")";
+				$("#btn").val(str);
+			},
+			error : function(result){// 결과가 실패했을 때 받는 영역
+				alert("전송 실패 테스트")
+			} 
+		});
+		// 에이작스에서 결과가 안들어와도 아래 코드가 실행됨
+		// 기다리다가 결과가 나타남(기다리는게 비동기성)
+	});
+});
+
 </script>
 </head>
 <body>
@@ -161,7 +188,9 @@ function check6(){
 <div>
 <div>
 <h3><%=bv.getSubject() %>(조회수:<%=bv.getViewcnt() %>)</h3>
-<%=bv.getWriter() %>(<%=bv.getWriterday() %>)
+<!--  onclick="location.href='request.getContextPath()/board/boardRecom.aws?bidx=bv.getBidx()'-->
+ <input type="button"  id="btn" value ="추천(<%=bv.getRecom() %>)">
+<%=bv.getWriter() %>(<%=bv.getWriterday().substring(0,10) %>) 
 </div>
 <hr>
 <div>
@@ -198,9 +227,11 @@ function check6(){
 	<button type = "button" class="B" name="btn2" onclick="check4();">
 	답변
 	</button>
+	<a href="<%=request.getContextPath() %>/board/boardList.aws">
 	<button type = "button" class="B" name="btn2" onclick="check5();">
 	목록
 	</button>
+	</a>
 </div>
 <br>
 <div class="C">

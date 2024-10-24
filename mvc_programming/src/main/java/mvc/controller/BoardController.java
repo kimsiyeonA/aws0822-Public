@@ -16,6 +16,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import com.oreilly.servlet.MultipartRequest;
+import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
+import com.oreilly.servlet.multipart.FileRenamePolicy;
+
 
 @WebServlet("/BoardController")
 public class BoardController extends HttpServlet {
@@ -72,6 +76,37 @@ public class BoardController extends HttpServlet {
 		}else if(location.equals("boardWriteAction.aws")){
 			//System.out.println("boardWriteAction.aws"); 
 			
+			// 저장될 위치
+			/*
+			 * String
+			 * savePath="D:\\Git\\aws0822-Public\\mvc_programming\\src\\main\\webapp\\img";
+			 * int sizeLimit = 15*1024*1024; // 15M // 저장파일 용량 크기 String dataType = "UTF-8";
+			 * // 저장파일 인식 확인 DefaultFileRenamePolicy policy = new
+			 * DefaultFileRenamePolicy();// 파일 이름이 중복될때 쓰는 매서드 MultipartRequest multi = new
+			 * MultipartRequest(request,savePath,sizeLimit,dataType,policy);
+			 * 
+			 * Integer
+			 */
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			// 1. 파라미터 값을 넘겨받는다. ? 
 			String subject = request.getParameter("boardtitle");
 			String contents = request.getParameter("boardbody");
@@ -114,7 +149,17 @@ public class BoardController extends HttpServlet {
 			
 			//2. 처리하기
 			BoardDao bd = new BoardDao(); // 보드 메서드 객체생성하고
+			
+			//---------여기에 조회수 업데이트 하게 만드는 쿼리 만들기
+			bd.boardViewCntUpdate(bidxInt); // 트랜젝션은 업데이트와 인서트만 들어가고 셀렉트는 해당이 안됨
+			// 그래서 값을 표시하는게 아니라 구문만 실행하면 됨
+			// 업데이트와 인서트는 값을 왔다갔다 하면서 바꿀 수 있고 셀렉트는 조회용이라서 값을 주고 받을 수 없음
+			// 그래서 업데이트를 한 후 업데이트한 값을 셀렉트 자체에서 끌어오면 됨
+			//------------------------------------------------------
+			
 			BoardVo bv = bd.boardSelectOne(bidxInt); // 파라미터 보드번호를 넘겨 받아 BoardVo로 출력되는 객체를 담아주기
+			
+		
 			request.setAttribute("bv" , bv);//포워드 방식이라 같은 영역 안에 있어서 공유헤서 jsp 페이지에서 꺼내쓸수 있다.
 			//System.out.println("boardSelectOnebv" + bv);
 			
@@ -130,6 +175,7 @@ public class BoardController extends HttpServlet {
 			
 			BoardDao bd = new BoardDao(); // 보드 메서드 객체생성하고
 			BoardVo bv = bd.boardSelectOne(bidxInt); // 파라미터 보드번호를 넘겨 받아 BoardVo로 출력되는 객체를 담아주기
+			bv.setViewcnt(bd.boardViewCntUpdate(bidxInt));
 			request.setAttribute("bv" , bv);//포워드 방식이라 같은 영역 안에 있어서 공유헤서 jsp 페이지에서 꺼내쓸수 있다.
 			
 			paramMethod="F"; 
@@ -176,9 +222,25 @@ public class BoardController extends HttpServlet {
 	             
 			}
 			paramMethod = "S";
+		}else if(location.equals("boardRecom.aws")){
+			
+			String bidx = request.getParameter("bidx");
+			int bidxInt = Integer.parseInt(bidx);
+			
+			BoardDao bd = new BoardDao();
+			int recom = bd.boardRecomUpdate(bidxInt);
+			System.out.println("boardRecom recom"+recom);
+			//paramMethod = "S";
+			//url = request.getContextPath() + "/board/boardContents.aws?bidx="+bidx;
+			
+
+			// 조회수가 변화하지 않게 에이작스 사용
+			PrintWriter out = response.getWriter();
+			//out.print("{\"키값\":\"결과값\"}"); // 안에 있는 큰 따옴표는 밖에 있는 큰 따옴표와 구분하기 위해서 \로 구분함
+			out.print("{\"recom\": \""+recom+"\"}"); // {"키값":"결과값"}
 		}
 			
-			
+	
 			
 		
 		if(paramMethod.equals("F")) {

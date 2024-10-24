@@ -48,6 +48,7 @@ public class BoardDao {
 				String writer = rs.getString("writer");
 				int viewcnt = rs.getInt("viewcnt");
 				String writerday = rs.getString("writerday");
+				int recom = rs.getInt("recom");
 				
 				BoardVo bv = new BoardVo();
 				bv.setBidx(bidx);
@@ -55,6 +56,7 @@ public class BoardDao {
 				bv.setWriter(writer);
 				bv.setViewcnt(viewcnt);
 				bv.setWriterday(writerday);
+				bv.setRecom(recom);
 				
 				alist.add(bv); 
 				//System.out.println(bv);
@@ -213,7 +215,7 @@ public class BoardDao {
 			 try{ // 각 객체도 소멸시키고 db연결을 끝는다.
 				 rs.close();
 				 pstmt.close();
-			 	 conn.close(); // 자원 관리를 위해 연결을 끊음
+			 	conn.close(); // 자원 관리를 위해 연결을 끊음
 			 }catch(Exception e){
 				 e.printStackTrace();
 			 } 
@@ -251,4 +253,64 @@ public class BoardDao {
 		return value;
 	}
 
+	public int boardViewCntUpdate(int bidx) {
+		int value = 0;
+		String sql = "update board set viewcnt = viewcnt + 1 where bidx=?";
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bidx);
+			value = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			 try{ // 각 객체도 소멸시키고 db연결을 끝는다.
+				 pstmt.close();
+			 	 //conn.close();  // 게시글 조회하기 메서드 실행해야되서 conn 연결은 끊지 않는다
+
+			 }catch(Exception e){
+				 e.printStackTrace();
+			 } 
+		}
+
+		return value;
+	}
+	
+	public int boardRecomUpdate(int bidx) {
+		int value = 0;
+		int recom = 0;
+		ResultSet rs = null;
+		String sql = "update board set recom = recom + 1 where bidx=?";
+		String sql2 = "select recom from board where bidx=?";
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bidx);
+			value = pstmt.executeUpdate();
+			
+			pstmt = conn.prepareStatement(sql2);
+			pstmt.setInt(1, bidx);
+			rs = pstmt.executeQuery();
+			//rs에 결과를 담아서 보냄
+				if(rs.next()) {//rs에 데이터가 있으면 꺼내기 
+					recom = rs.getInt("recom");
+				}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			 try{ // 각 객체도 소멸시키고 db연결을 끝는다.
+				 pstmt.close();
+			 	 //conn.close();  // 게시글 조회하기 메서드 실행해야되서 conn 연결은 끊지 않는다
+
+			 }catch(Exception e){
+				 e.printStackTrace();
+			 } 
+		}
+		System.out.println("dao recom"+recom);
+		
+		return recom; // recom 리턴
+		
+	}
 }
