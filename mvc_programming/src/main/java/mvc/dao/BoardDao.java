@@ -31,7 +31,7 @@ public class BoardDao {
 		
 		//System.out.println("9999");
 		ArrayList<BoardVo> alist = new ArrayList<BoardVo>(); // ArrayList 컬랙션 객체에 BoardVo를 담겠다.BoardVo는 컬럼값을 담겠다
-		String sql="SELECT * FROM board ORDER BY originbidx DESC, depth ASC limit ?, ?";
+		String sql="SELECT * FROM board where delyn='N' ORDER BY originbidx DESC, depth ASC limit ?, ?";
 		ResultSet rs = null; 
 
 		//System.out.println("1234");
@@ -113,11 +113,12 @@ public class BoardDao {
 		String subject = bv.getSubject();
 		String contents = bv.getContents();
 		String writer = bv.getWriter();
-		String password = bv.getSubject();
+		String password = bv.getPassword();
+		String filename = bv.getFilename();
 		int midx = bv.getMidx();
 		
-		String sql = "insert into board(originbidx,depth,level_,subject,contents,writer,password,midx) \r\n"
-				+ "value(null,0,0,?,?,?,?,?)";
+		String sql = "insert into board(originbidx,depth,level_,subject,contents,writer,password,midx,filename) \r\n"
+				+ "value(null,0,0,?,?,?,?,?,?)";
 		String sql2="update board \r\n"
 				+ "set originbidx = (select * from (select max(bidx) from board) as temp) \r\n"
 				+ "where bidx = (select * from (select max(bidx) from board) as temp)";
@@ -130,6 +131,7 @@ public class BoardDao {
 			pstmt.setString(3, writer);
 			pstmt.setString(4, password);
 			pstmt.setInt(5, midx);
+			pstmt.setString(6, filename);
 			int exec = pstmt.executeUpdate(); // 실행되면 1 안되면 0
 			
 			pstmt = conn.prepareStatement(sql2);
@@ -313,4 +315,99 @@ public class BoardDao {
 		return recom; // recom 리턴
 		
 	}
+	
+	public int boardDelete(int bidx, String password) {
+		int value = 0;
+		String sql = "update board SET delyn = \"Y\" where bidx = ? and password = ?";
+		
+		
+		try {
+			pstmt =  conn.prepareStatement(sql);
+			pstmt.setInt(1, bidx);
+			pstmt.setString(2, password);
+			value = pstmt.executeUpdate(); // 성공하면 1, 실패하면 0 
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			 try{ // 각 객체도 소멸시키고 db연결을 끝는다.
+				 pstmt.close();
+			 	 conn.close();  // 게시글 조회하기 메서드 실행해야되서 conn 연결은 끊지 않는다
+
+			 }catch(Exception e){
+				 e.printStackTrace();
+			 } 
+		}
+		System.out.println("boardDelete value"+value);
+		return value;
+	}
+	
+	public int boardReply(BoardVo bv) {
+		//int value = 0;
+		ResultSet rs = null;
+		int maxbidx = 0;
+		
+		String sql = "update board set depth=depth+1 where originbidx=? and depth > ?";
+		String sql2 = "insert into board (originbidx,depth,level_,subject,contents,writer,midx,filename,password)\r\n"
+				+ "values (?, ?, ?,?,?,?,?,?,?);"; // ""에서는 연산이 안되서 밖에서 연산한다음 집어넣기
+		String sql3 = "select max(bidx) as maxbidx from board where originbidx=? ";
+		
+		
+		
+		try {
+			conn.setAutoCommit(false); // false : 수동커밋으로 하겠다.
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, bv.getOriginbidx());
+			pstmt.setInt(2, bv.getDepth());
+			int exec = pstmt.executeUpdate(); // 실행되면 1 안되면 0
+			
+			pstmt = conn.prepareStatement(sql2);
+			pstmt.setInt(1, bv.getOriginbidx());
+			pstmt.setInt(2, bv.getDepth()+1);
+			pstmt.setInt(3, bv.getLevel_()+1);
+			pstmt.setString(4, bv.getSubject());
+			pstmt.setString(5, bv.getContents());
+			pstmt.setString(6, bv.getWriter());
+			pstmt.setInt(7, bv.getMidx());
+			pstmt.setString(8, bv.getFilename());
+			pstmt.setString(9, bv.getPassword());
+			int exec2 = pstmt.executeUpdate(); 
+			
+			
+			pstmt = conn.prepareStatement(sql3);
+			pstmt.setInt(1, bv.getOriginbidx());
+			rs = pstmt.executeQuery(); 
+			
+			if(rs.next()) {//rs에 데이터가 있으면 꺼내기 
+				maxbidx = rs.getInt("maxbidx");
+			}
+			
+			
+			conn.commit();
+			conn.setAutoCommit(true);
+			
+			//value = exec+exec2;
+		} catch (SQLException e) {
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			e.printStackTrace();
+		} finally {
+			 try{ // 각 객체도 소멸시키고 db연결을 끝는다.
+				 pstmt.close();
+			 	 conn.close();
+			 }catch(Exception e){
+				 e.printStackTrace();
+			 } 
+
+		}
+
+		return maxbidx;
+	}
+	
 }

@@ -114,7 +114,7 @@ function check2(){
 	<tr>
 		<td>첨부파일</td>
 		<td class = "A">
-		<input type = "file">
+		<input type = "file" name="filename" >
 		</td>
 	</tr>
 	</table>

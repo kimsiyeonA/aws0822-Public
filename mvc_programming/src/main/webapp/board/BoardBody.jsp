@@ -204,9 +204,10 @@ $(document).ready(function(){
 </div>
 <hr>
 <div>
-<%if(bv.getFilename() != null){ %>
+<%if(bv.getFilename() == null || bv.getFilename().equals("")){}else{ %>
+	<img src="<%=request.getContextPath()%>/images/<%=bv.getFilename()%>">
 	<button type = "button" class="A" name="btn2" onclick="check1();">
-	<img src = "<%=bv.getFilename()%>">
+	<%=bv.getFilename()%>
 	</button>
 <%} %>
 </div>
@@ -216,17 +217,22 @@ $(document).ready(function(){
 
 <div class="B">
 	<a href="<%=request.getContextPath() %>/board/BoardUpdate.aws?bidx=<%=bv.getBidx() %>">
-	<button type = "button" class="B"  name="btn2" onclick="check2();">
-	수정
-	</button>
+		<button type = "button" class="B"  name="btn2" onclick="check2();">
+		수정
+		</button>
 	</a>
-	
-	<button type = "button" class="B" name="btn2" onclick="check3();">
-	삭제
-	</button>
+	<a href="<%=request.getContextPath() %>/board/BoardDelete.aws?bidx=<%=bv.getBidx() %>">
+		<button type = "button" class="B" name="btn2" onclick="check3();">
+		삭제
+		</button>
+	</a>
+	<a href="<%=request.getContextPath() %>/board/BoardReply.aws?bidx=<%=bv.getBidx() %>">
 	<button type = "button" class="B" name="btn2" onclick="check4();">
 	답변
 	</button>
+	</a>
+	<!--bv.getOriginbidx() > bidx 만넘겨서 컨트롤러에서 값들을 받아오면서 간단하게 만들기로 함  -->
+	
 	<a href="<%=request.getContextPath() %>/board/boardList.aws">
 	<button type = "button" class="B" name="btn2" onclick="check5();">
 	목록

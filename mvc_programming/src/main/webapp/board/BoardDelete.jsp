@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+ <%
+String bidx = (String)request.getAttribute("bidx");
+ 
+    %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,7 +19,7 @@ td.A{
 text-align: center;
 }
 table{
-	width:800px;
+	width:80%;
 	 border : 1px solid #1d435c;
 	 border-collapse : collapse; 
      text-align: center;
@@ -46,11 +50,15 @@ function check1(){
 		alert("비밀번호를 입력해주세요");
 		fm.boarddelete.focus(); 
 		return;
-	}else if(fm.boarddelete.value != "" ){
-		alert("삭제하시겠습니까");
-		return;
 	}
-
+	
+	let ans = confirm("삭제하시겠습니까");
+	
+	if(ans == true){
+		fm.action="<%=request.getContextPath()%>/board/BoardDelectAction.aws";
+		fm.method="post";
+		fm.submit();
+	}
 	return;
 }
 
@@ -67,11 +75,12 @@ function check2(){
 <hr>
 <section>
 	<form name="frm">
+	<input type="hidden" name="bidx" value="<%=bidx %>" >
 	<table>
 	<tr>
 		<td >비밀번호</td>
 		<td class = "A">
-		<input type = "password"  name="boarddelete" maxlength = "50" style = "width:200px; height: 1rem;" >
+		<input type = "password"  name="password" maxlength = "50" style = "width:200px; height: 1rem;" >
 		</td>
 	</tr>
 	
@@ -80,9 +89,11 @@ function check2(){
 	<button type = "button" name="btn1" onclick="check1();">
 	저장
 	</button>
-	<button type = "button" name="btn2" onclick="check2();">
+	<a href="#" onclick="history.back();" >
+	<button type = "button" name="btn2" >
 	취소
 	</button>
+	</a>
 	</div>
 	</form>
  </section>

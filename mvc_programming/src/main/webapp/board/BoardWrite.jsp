@@ -75,7 +75,7 @@ function check1(){
 	if(ans == true){
 		fm.action="<%=request.getContextPath()%>/board/boardWriteAction.aws";
 		fm.method="post";
-		fm.enctype="multiple/form-data"
+		fm.enctype="multipart/form-data"
 		fm.submit();
 	}
 	return;
@@ -118,7 +118,7 @@ function check2(){
 	<tr>
 		<td>첨부파일</td>
 		<td class = "A">
-		<input type = "file" name="file">
+		<input type = "file" name="filename">
 		</td>
 	</tr>
 	</table>
