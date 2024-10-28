@@ -5,6 +5,12 @@
  BoardVo bv = (BoardVo)request.getAttribute("bv");
  // request.getAttribute();는 object로 되므로 BoardVo으로 강제 형변환 시켜준다.
 //System.out.println("boardSelectOne bvbv" + bv);
+/*
+ String memberName="";
+ if(session.getAttribute("memberName")!=null){
+		out.println("<script>alert('로그인 해주세요');location.href='"+request.getContextPath()+"/member/memberLogin.aws'</script>");
+	}
+ */
  %>
 <!DOCTYPE html>
 <html>
@@ -31,8 +37,8 @@ button.B{
 	color : white;
 }
 img{
-	width:50px;
-	height: 50px;
+	width:5%;
+	height: 5%;
 }
 div.B{
 	text-align: right;
@@ -63,24 +69,26 @@ div.C.a{
 	color : white;
 	text-align: center;
 }
+
 div.C.b{
     width: 100%;
     display:inline-block;
 	border: 1px solid black;
 
 }
-input[type="text"]{
-      width:70%;
-      height:100%;
-      border:none;
-      font-size:1em;
-      padding-left: 5px;
-      font-style: oblique;
-      display:inline;
-      outline:none;
-      box-sizing: border-box;
-      color:black;
-    }
+input[type="text"] {
+    width: 70%;
+    height: 100%;
+    border: none;
+    font-size: 1em;
+    padding-left: 5px;
+    display: inline;
+    outline: none;
+    box-sizing: border-box;
+    color: black;
+    background: inherit;
+    text-align: center;
+}
 
 div.D{
     display:block;
@@ -99,9 +107,14 @@ table{
 	 padding : 5px;
 	 
 	}
-a{ 
+.b a{ 
 	text-decoration: none;
 	color: none;
+	
+}
+ a{ 
+	text-decoration: none;
+	color: black;
 	
 }
 </style>
@@ -155,6 +168,7 @@ function check6(){
 }
 
 $(document).ready(function(){
+	$.boardCommentList();
 	$("#btn").click(function(){
 		alert("추천버튼 클릭")
 		
@@ -177,8 +191,80 @@ $(document).ready(function(){
 		// 에이작스에서 결과가 안들어와도 아래 코드가 실행됨
 		// 기다리다가 결과가 나타남(기다리는게 비동기성)
 	});
+	
+	$("#cmtBtn").click(function(){
+		//alert("ㅁㅎㅁㅎ")
+		
+	
+	
+		let loginCheck = "<%=session.getAttribute("midx") %>";
+		if(loginCheck=="" || loginCheck=="null" || loginCheck==null){
+			let ans = confirm("로그인을 입력해주세요")//함수의 값을 참과 거짓 true, false로 나눈다.
+			
+			if(ans == true){
+				location.href="<%=request.getContextPath() %>/member/memberLogin.aws";
+			}else{
+				
+			}
+			
+			//alert("로그인을 입력해주세요")
+			//location.href="<=request.getContextPath() %>/member/memberLogin.aws";
+			return;
+		}
+		
+		let cwriter  = $("#cwriter").val();
+		let ccontents = $("#ccontents").val();
+		
+		if(cwriter == "" ){
+			alert("작성자를 입력해주세요")
+			$("#cwriter").focus();
+			return;
+		}else if(ccontents==""){
+			alert("내용을 입력해주세요")
+			$("#ccontents").focus();
+			return;
+		}//유효성 검사
+		
+		$.ajax({
+			type : "post", // 내용을 넘기므로 Post
+			url : "<%=request.getContextPath()%>/comment/commentWriteAction.aws", 
+					// 넘기는 주소
+			dataType : "json", //json타입은 문서에서 {"키값":"value값","키값2":"value2값"}
+			data : {"cwriter" : cwriter,
+					"ccontents":ccontents,
+					"bidx":<%=bv.getBidx()%>,
+					"midx":<%=session.getAttribute("midx") %>},
+			success : function(result){//결과가 넘어와서 성공했을 때 받는 영역
+				
+				//alert("cnt값은"+result.cnt)
+				var str = "("+result.value+")";
+				alert("길이는"+result.value);
+			},
+			error : function(result){// 결과가 실패했을 때 받는 영역
+				alert("전송 실패 테스트")
+			} 
+		});
+		
+	});
+
 });
 
+$.boardCommentList=function(){
+	
+	$.ajax({
+		type : "get", 
+		url : "<%=request.getContextPath()%>/comment/commentList.aws?bidx=<%=bv.getBidx()%>", 
+				// 넘기는 주소
+		dataType : "json", //json타입은 문서에서 {"키값":"value값","키값2":"value2값"}
+		success : function(result){//결과가 넘어와서 성공했을 때 받는 영역
+			alert("boardCommentList 전송 성공 테스트")
+		},
+		error : function(result){// 결과가 실패했을 때 받는 영역
+			alert("boardCommentList 전송 실패 테스트")
+		} 
+	});
+
+} 
 </script>
 </head>
 <body>
@@ -203,12 +289,18 @@ $(document).ready(function(){
 </p>
 </div>
 <hr>
-<div>
+<div >
 <%if(bv.getFilename() == null || bv.getFilename().equals("")){}else{ %>
 	<img src="<%=request.getContextPath()%>/images/<%=bv.getFilename()%>">
-	<button type = "button" class="A" name="btn2" onclick="check1();">
 	<%=bv.getFilename()%>
+	
+	<p>
+	<a href="<%=request.getContextPath() %>/board/BoardDowmload.aws?filename=<%=bv.getFilename() %>">
+	<button type = "button" class="B"  name="btn2" >
+	첨부파일 다운로드	
 	</button>
+	</a>
+	</p>
 <%} %>
 </div>
 </div>
@@ -242,11 +334,19 @@ $(document).ready(function(){
 <br>
 <div class="C">
 	<div class="C a">
-	admin
+	<input type = "text" id="cwriter" name="cwriter" value=
+	<%
+	 if(session.getAttribute("memberName") == null){
+		 out.print("비회원");
+	 }else{
+		 out.print(session.getAttribute("memberName"));  
+	}
+	%>
+	readonly="readonly">
 	</div>
 	<div class="C b">
-	<input type = "text"  name="comment" style = "width:70%; height: 2rem; margin: 0;">
-	<button type = "button" class="C" name="btn2" onclick="check6();" >
+	<input type = "text" id="ccontents" name="ccontents" style = "width:70%; height: 2rem; margin: 0; text-align: left;">
+	<button type = "button" id="cmtBtn" class="C" name="btn2" >
 	댓글쓰기
 	</button>
 	</div>
@@ -261,6 +361,13 @@ $(document).ready(function(){
 		<th style = "width:40%;">내용</th>
 		<th style = "width:20%;">날짜</th>
 		<th style = "width:10%;">DEL</th>
+	</tr>
+	<tr>
+		<td style = "width:10%;">번호</td>
+		<td style = "width:20%;">작성자</td>
+		<td style = "width:40%;">내용</td>
+		<td style = "width:20%;">날짜</td>
+		<td style = "width:10%;">DEL</td>
 	</tr>
 	</thead>
 	<tbody>

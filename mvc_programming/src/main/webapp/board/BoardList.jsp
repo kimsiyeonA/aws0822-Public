@@ -7,6 +7,19 @@ ArrayList<BoardVo> alist = (ArrayList<BoardVo>)request.getAttribute("alist");
 //System.out.println("alist : "+alist);
 PageMaker pm = (PageMaker)request.getAttribute("pm");
 
+//------ 리스트 순위 주기
+int totalCount = pm.getTotalCount();
+//System.out.println("게시물 수는? list "+totalCount);
+//int num = totalCount - (pm.getScri().getPage()-1) * pm.getScri().getPerPageNum();
+// 1 num => 전체개수 번호 30 - 0*15 = 30
+// 2 30 - (2-1)*15 =15 
+//------
+
+
+String keyword =  pm.getScri().getKeyword();
+String searchType = pm.getScri().getSearchType();
+
+String param="keyword="+keyword+"&searchType="+searchType+"";
 %>
 <!DOCTYPE html>
 <html>
@@ -15,7 +28,7 @@ PageMaker pm = (PageMaker)request.getAttribute("pm");
 <title>게시판 글목록 페이지</title>
 <style>
 html{
-	width:100%;
+	width:100%;c
 	height: 100%;
 }
 body{
@@ -102,19 +115,26 @@ display:inline-block;
 	text-decoration: none;
 }
 
+.title{
+text-align: left;
+}
+
 </style>
 </head>
 <body>
  <section>
 <hr>
+<form name="frm" method="get" action="<%=request.getContextPath() %>/board/boardList.aws" >
 <div class="A">
-	<select name = "boardlistchoice" style = "width:60px;" >
-	<option value = "제목" selected> 제목 </option>
-	<option value = "내용"  > 내용 </option>
-	<option value = "작성자" > 작성자 </option>
+	<select style = "width:60px;" name="searchType">
+	<option value="subject" selected> 제목 </option>
+	<option value="writer" > 작성자 </option>
+	<!--  <option value = "작성자" > 작성자 </option>-->
 	</select> 
-	<input type = "text" name = "boardlistsearch" maxlength = "30" style = "width:160px;">
+	<input type = "text" name = "keyword" maxlength = "30" style = "width:160px;">
+	<button type="submit" class="btn">검색</button>
 </div>
+</form>
 <table>
 	<thead>
 	<tr>
@@ -127,16 +147,47 @@ display:inline-block;
 	</tr>
 	</thead>
 	<tbody>
-	<%for(BoardVo bv : alist){ %>
+	<%
+	int num = totalCount - (pm.getScri().getPage()-1) * pm.getScri().getPerPageNum();
+	for(BoardVo bv : alist){ 
+		
+		String lvlStr = "" ;
+		for(int i=1; i<=bv.getLevel_();i++){
+			lvlStr = lvlStr+ "&nbsp;&nbsp;&nbsp;";
+			if(i==bv.getLevel_()){
+				lvlStr=lvlStr+"ㄴ";
+			}
+		}
+		
+		//System.out.println("bv.getLevel_() "+bv.getLevel_());
+		//System.out.println("lvlStr"+lvlStr); 
+/* 		String lvlStr = "";
+		for(int i=1;i<=bv.getLevel_(); i++){
+			
+			lvlStr = lvlStr +"&nbsp;&nbsp;";
+			
+			if (i == bv.getLevel_()){
+				lvlStr  = lvlStr + "ㄴ";
+			}
+		}
+		 */
+		
+	%>
 		<tr>
-			<td><%=bv.getBidx() %></td>
-			<td><a href="<%=request.getContextPath()%>/board/boardContents.aws?bidx=<%=bv.getBidx()%>"><%=bv.getSubject() %></a></td>
+			<td><%=num %></td> <!-- bv.getBidx() -->
+			<td class="title">
+			<%=lvlStr %>
+			<a href="<%=request.getContextPath()%>/board/boardContents.aws?bidx=<%=bv.getBidx()%>"><%=bv.getSubject() %></a></td>
 			<td><%=bv.getWriter() %></td>
 			<td><%=bv.getViewcnt() %></td>
 			<td><%=bv.getRecom() %></td>
 			<td><%=bv.getWriterday().substring(0,10) %></td>
 		</tr>
-	<%}%>
+	<%
+	num = num-1;
+	}
+	%>
+
 	</tbody>
 </table>
 <div class="B">
@@ -146,15 +197,15 @@ display:inline-block;
 </div>
 	<div class="C">
 	<% if(pm.isPrev()==true){ %>	
-	<span><a href="<%=request.getContextPath()%>/board/boardList.aws?page=<%=pm.getStartPage()-1%>">◀</a></span>
+	<span><a href="<%=request.getContextPath()%>/board/boardList.aws?page=<%=pm.getStartPage()-1%>&<%=param %>">◀</a></span>
 	<%}%>	
 	<% for(int i = pm.getStartPage(); i<=pm.getEndPage();i++){ %>	
-	<span <%if(i==pm.getCri().getPage()){%>class="on"<%}%>>
-	<a href="<%=request.getContextPath() %>/board/boardList.aws?page=<%=i%>"> <%=i %></a></span>
+	<span <%if(i==pm.getScri().getPage()){%>class="on"<%}%>>
+	<a href="<%=request.getContextPath() %>/board/boardList.aws?page=<%=i%>&<%=param %>"> <%=i %></a></span>
 	<%}%>	
 	<span>
 	<% if(pm.isNext()==true && pm.getEndPage()>0){ %>	
-	<a href="<%=request.getContextPath()%>/board/boardList.aws?page=<%=pm.getEndPage()+1%>">▶</a>
+	<a href="<%=request.getContextPath()%>/board/boardList.aws?page=<%=pm.getEndPage()+1%>&<%=param %>">▶</a>
 	<%}%>	
 	</span>
 	</div>

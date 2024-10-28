@@ -123,7 +123,7 @@ public class MemberController extends HttpServlet {  // MVC방식으로 가기�
 			paramMethod="F"; // 하단에서 포워드로 처리합니다
 			
 		}else if (location.equals("memberLoginAction.aws")) {
-			System.out.println("memberLoginAction들어왔나");
+			//System.out.println("memberLoginAction들어왔나");
 			
 			String memberId = request.getParameter("memberid");
 			String memberPwd = request.getParameter("memberpwd");
@@ -131,7 +131,7 @@ public class MemberController extends HttpServlet {  // MVC방식으로 가기�
 			//memberDao에 있는 메소드 불러와서 체크하기
 			MemberDao md = new MemberDao();
 			MemberVo mv = md.memberLogincheck(memberId, memberPwd);
-			System.out.println("mv객체확인 "+mv);
+			//ㄴystem.out.println("mv객체확인 "+mv);
 			
 			
 			if(mv == null) {

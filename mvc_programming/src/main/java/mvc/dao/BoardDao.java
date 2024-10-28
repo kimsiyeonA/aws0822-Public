@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import mvc.dbcon.Dbconn;
 import mvc.vo.BoardVo;
 import mvc.vo.Criteria;
+import mvc.vo.SearchCriteria;
 
 
 public class BoardDao {
@@ -23,15 +24,27 @@ public class BoardDao {
 	}
 	
 	
-	public ArrayList<BoardVo> boardSelectAll(Criteria cri) {//생성자를 만든다 왜? DB연결하는 DBcomm 객체를 생성하려고... 생성해야 mysql 접속하니깐
+	public ArrayList<BoardVo> boardSelectAll(SearchCriteria scri) {//생성자를 만든다 왜? DB연결하는 DBcomm 객체를 생성하려고... 생성해야 mysql 접속하니깐
 		
-		int page = cri.getPage(); // 페이지 번호
-		int perPageNum = cri.getPerPageNum();//화면 노출 리스트 개수
+		int page = scri.getPage(); // 페이지 번호
+		int perPageNum = scri.getPerPageNum();//화면 노출 리스트 개수
+		
+		
+		String str = "";
+		String keyword = scri.getKeyword();
+		String searchType = scri.getSearchType();
+		
+		// 키워드가 존재한다면 like구문을 활용한다
+		if(!scri.getKeyword().equals("")) {
+			
+			str = "and "+searchType+" like concat('%','"+keyword+"','%')";
+			
+		} // 없으면 전체실행되므로 else는 없어도 됨 
 		
 		
 		//System.out.println("9999");
 		ArrayList<BoardVo> alist = new ArrayList<BoardVo>(); // ArrayList 컬랙션 객체에 BoardVo를 담겠다.BoardVo는 컬럼값을 담겠다
-		String sql="SELECT * FROM board where delyn='N' ORDER BY originbidx DESC, depth ASC limit ?, ?";
+		String sql="SELECT * FROM board where delyn='N'"+str+" ORDER BY originbidx DESC, depth ASC limit ?, ?";
 		ResultSet rs = null; 
 
 		//System.out.println("1234");
@@ -49,6 +62,7 @@ public class BoardDao {
 				int viewcnt = rs.getInt("viewcnt");
 				String writerday = rs.getString("writerday");
 				int recom = rs.getInt("recom");
+				int level_ = rs.getInt("level_");
 				
 				BoardVo bv = new BoardVo();
 				bv.setBidx(bidx);
@@ -57,6 +71,7 @@ public class BoardDao {
 				bv.setViewcnt(viewcnt);
 				bv.setWriterday(writerday);
 				bv.setRecom(recom);
+				bv.setLevel_(level_);
 				
 				alist.add(bv); 
 				//System.out.println(bv);
@@ -78,10 +93,24 @@ public class BoardDao {
 	}
 	
 	// 게시판 전체 개수 구하기
-	public int boardTotalCount() {
+	public int boardTotalCount(SearchCriteria scri) {
+		
+		
+		String str = "";
+		String keyword = scri.getKeyword();
+		String searchType = scri.getSearchType();
+		
+		// 키워드가 존재한다면 like구문을 활용한다
+		if(!scri.getKeyword().equals("")) {
+			
+			str = "and "+searchType+" like concat('%','"+keyword+"','%')";
+			
+		} // 없으면 전체실행되므로 else는 없어도 됨 
+		
+		
 		int value = 0;
 		//1. 쿼리 만들기
-		String sql ="select count(*) as cnt from board where delyn='N'";
+		String sql ="select count(*) as cnt from board where delyn='N'"+str+"";
 		//2. conn 객체 안에 있는 구문클래스 호출하기
 		//3. DB 컬럼값을 받는 전용 클래스 ResultSet 호출(ResultSet 특징은 데이터를 그래도 복사하기 때문에 전달이 빠름)
 		ResultSet rs = null;
@@ -116,9 +145,10 @@ public class BoardDao {
 		String password = bv.getPassword();
 		String filename = bv.getFilename();
 		int midx = bv.getMidx();
+		String ip = bv.getIp();
 		
-		String sql = "insert into board(originbidx,depth,level_,subject,contents,writer,password,midx,filename) \r\n"
-				+ "value(null,0,0,?,?,?,?,?,?)";
+		String sql = "insert into board(originbidx,depth,level_,subject,contents,writer,password,midx,filename,ip) \r\n"
+				+ "value(null,0,0,?,?,?,?,?,?,?)";
 		String sql2="update board \r\n"
 				+ "set originbidx = (select * from (select max(bidx) from board) as temp) \r\n"
 				+ "where bidx = (select * from (select max(bidx) from board) as temp)";
@@ -132,6 +162,7 @@ public class BoardDao {
 			pstmt.setString(4, password);
 			pstmt.setInt(5, midx);
 			pstmt.setString(6, filename);
+			pstmt.setString(7, ip);
 			int exec = pstmt.executeUpdate(); // 실행되면 1 안되면 0
 			
 			pstmt = conn.prepareStatement(sql2);
@@ -350,8 +381,8 @@ public class BoardDao {
 		int maxbidx = 0;
 		
 		String sql = "update board set depth=depth+1 where originbidx=? and depth > ?";
-		String sql2 = "insert into board (originbidx,depth,level_,subject,contents,writer,midx,filename,password)\r\n"
-				+ "values (?, ?, ?,?,?,?,?,?,?);"; // ""에서는 연산이 안되서 밖에서 연산한다음 집어넣기
+		String sql2 = "insert into board (originbidx,depth,level_,subject,contents,writer,midx,filename,password,ip)\r\n"
+				+ "values (?, ?, ?,?,?,?,?,?,?,?);"; // ""에서는 연산이 안되서 밖에서 연산한다음 집어넣기
 		String sql3 = "select max(bidx) as maxbidx from board where originbidx=? ";
 		
 		
@@ -373,6 +404,7 @@ public class BoardDao {
 			pstmt.setInt(7, bv.getMidx());
 			pstmt.setString(8, bv.getFilename());
 			pstmt.setString(9, bv.getPassword());
+			pstmt.setString(10, bv.getIp());
 			int exec2 = pstmt.executeUpdate(); 
 			
 			
