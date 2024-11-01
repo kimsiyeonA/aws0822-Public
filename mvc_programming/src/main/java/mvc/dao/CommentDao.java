@@ -25,33 +25,38 @@ public class CommentDao {
 	}
 	
 	
-	public ArrayList<CommentVo> CommentSelectAll(int bidx) {
+	public ArrayList<CommentVo> commentSelectAll(int bidx) {
 		
 		ArrayList<CommentVo> alist = new ArrayList<CommentVo>();
 		String sql="SELECT * FROM comment where delyn='N' and bidx= ? ORDER BY cidx DESC";
 		ResultSet rs = null; 
-		System.out.println("CommentSelectAll sql ==> "+sql);
+		//System.out.println("CommentSelectAll sql ==> "+sql);
 
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, bidx);
 			rs = pstmt.executeQuery();
-			System.out.println("CommentSelectAll rs ==> "+rs);
+			//System.out.println("CommentSelectAll rs ==> "+rs);
 			
 			while(rs.next()){ 
 				int cidx = rs.getInt("cidx");
 				String ccontents = rs.getString("ccontents");
 				String cwriter = rs.getString("cwriter");
 				String writeday = rs.getString("writeday");
+				String delyn = rs.getString("delyn");
+				int midx = rs.getInt("midx");
 
 				
 				CommentVo cv = new CommentVo();
+				cv.setCidx(cidx);
 				cv.setCcontents(ccontents);
 				cv.setCwriter(cwriter);
 				cv.setWriteday(writeday);
+				cv.setDelyn(delyn);
+				cv.setMidx(midx);
 				
 				alist.add(cv); 
-				System.out.println("CommentSelectAll cv ==> "+cv);
+				//System.out.println("CommentSelectAll cv ==> "+cv);
 				
 			}
 		
@@ -117,7 +122,7 @@ public class CommentDao {
 	}
 	*/
 	
-	public int CommentInsert(CommentVo cv) {
+	public int commentInsert(CommentVo cv) {
 		int value = 0;
 		
 		String cwriter  = cv.getCwriter();
@@ -129,7 +134,7 @@ public class CommentDao {
 		String sql = "insert into comment(csubject,ccontents,cwriter,bidx,midx,cip) \r\n"
 				+ "value(null,?,?,?,?,?)";
 	
-		System.out.println("CommentInsert value==> "+value);
+		//System.out.println("CommentInsert value==> "+value);
 		try {
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, ccontents);
@@ -152,35 +157,34 @@ public class CommentDao {
 
 	}
 	
-	/*
-	public int CommentDelete(int bidx, String password) {
+
+	public int commentDelete(int cidx) {
 		int value = 0;
-		String sql = "update board SET delyn = \"Y\" where bidx = ? and password = ?";
+		String sql = "update comment SET delyn = \"Y\" where cidx = ? ";
 		
 		
 		try {
 			pstmt =  conn.prepareStatement(sql);
-			pstmt.setInt(1, bidx);
-			pstmt.setString(2, password);
-			value = pstmt.executeUpdate();  성공하면 1, 실패하면 0 
+			pstmt.setInt(1, cidx);
+			value = pstmt.executeUpdate();  //성공하면 1, 실패하면 0 
 			
 			
 		} catch (SQLException e) {
-			 TODO Auto-generated catch block
+			 //TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally {
-			 try{  각 객체도 소멸시키고 db연결을 끝는다.
+			 try{  //각 객체도 소멸시키고 db연결을 끝는다.
 				 pstmt.close();
-			 	 conn.close();   게시글 조회하기 메서드 실행해야되서 conn 연결은 끊지 않는다
+			 	 conn.close();   //게시글 조회하기 메서드 실행해야되서 conn 연결은 끊지 않는다
 
 			 }catch(Exception e){
 				 e.printStackTrace();
 			 } 
 		}
-		System.out.println("boardDelete value"+value);
+
 		return value;
 	}
-	*/
+
 }
 	
 	

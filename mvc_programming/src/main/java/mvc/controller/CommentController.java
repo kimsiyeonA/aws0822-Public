@@ -52,23 +52,47 @@ public class CommentController extends HttpServlet {
 			
 			CommentDao cd = new CommentDao();
 			
-			ArrayList<CommentVo> alist = cd.CommentSelectAll(Integer.parseInt(bidx));
+			ArrayList<CommentVo> alist = cd.commentSelectAll(Integer.parseInt(bidx));
 			
 			int cidx=0;
 			String cwriter="";
 			String ccontents="";
 			String writeday="";
-			
+			String delyn="";
+			int midx=0;
 			String str = ""; // 에이작스 담기
-			
+			/*
 			for(int i=0;i<alist.size();i++) {
 				cidx=alist.get(i).getCidx();
 				cwriter=alist.get(i).getCwriter();
 				ccontents=alist.get(i).getCcontents();
 				writeday=alist.get(i).getWriteday();
-				
-			    str = str + "{ \"cidx\":\""+cidx+"\" ,\"cwriter\":\""+cwriter+"\", \"ccontents\":\""+ccontents+"\", \"writeday\":\""+writeday+"\" }";
+				delyn=alist.get(i).getDelyn();
+				str = str + "{ \"cidx\" : \""+cidx+" \", \"cwriter\" : \""+cwriter+"\", \"ccontents\":\""+ccontents+"\",\"writeday\":\""+writeday+"\",\"delyn\":\""+delyn+"\" }";
+			    //str = str + "{ \"cidx\" : \""+cidx+" \", \"cwriter\" : \""+cwriter+"\", \"ccontents\":\""+ccontents+"\",\"writeday\":\""+writeday+"\", \"delyn\":\""+delyn+"\" }";
 				// { "a": "1","b": "2", "c": "3"}
+			}
+			*/
+			for(int i=0;i<alist.size();i++) {
+				
+				cidx = alist.get(i).getCidx();
+				cwriter = alist.get(i).getCwriter();
+			    ccontents = alist.get(i).getCcontents();
+			    writeday = alist.get(i).getWriteday();
+			    delyn = alist.get(i).getDelyn();
+			    midx = alist.get(i).getMidx();
+			    
+			    String cma = "";
+			    if (i == alist.size()-1 ) {
+			    	cma="";
+			    }else {
+			    	cma=",";
+			    }
+			    
+			    
+			    str = str + "{ \"cidx\" : \""+cidx+" \", \"cwriter\" : \""
+			    +cwriter+"\", \"ccontents\":\""+ccontents+"\",\"writeday\":\""+writeday+"\",\"delyn\":\""+delyn+"\",\"midx\":\\"+midx+"\" }"+cma;
+			    
 			}
 			
 			PrintWriter out = response.getWriter();
@@ -96,7 +120,7 @@ public class CommentController extends HttpServlet {
 			//Comment 객체 생성
 			CommentDao cd = new CommentDao();
 			//System.out.println("commentWriteAction cd==> "+cd);
-			int value = cd.CommentInsert(cv);
+			int value = cd.commentInsert(cv);
 			//System.out.println("commentWriteAction value==> "+value);
 			
 			PrintWriter out =response.getWriter();
@@ -106,37 +130,19 @@ public class CommentController extends HttpServlet {
 			
 		
 		}else if(location.equals("commentDelectAction.aws")){
+
+			String cidx = request.getParameter("cidx");
+			System.out.println("commentDelectAction cidx==>>"+cidx);
+			//delyn y로 업데이트 하는 메소드를 만들어서 호출한다.
+			CommentDao cd = new CommentDao();
+			int value = cd.commentDelete(Integer.parseInt(cidx));
 			
-			/*
-			 * String bidx = request.getParameter("bidx"); String password =
-			 * request.getParameter("password");
-			 * 
-			 * // 처리하기 BoardDao bd = new BoardDao(); int value =
-			 * bd.boardDelete(Integer.parseInt(bidx), password); // 0,1
-			 * 
-			 * System.out.println("BoardDelectAction value"+value);
-			 * 
-			 * // 삭제 후 가야할 경로 지정 paramMethod="S"; if(value==1) { url =
-			 * request.getContextPath() + "/board/boardList.aws?bidx="+bidx;
-			 * 
-			 * }else { url = request.getContextPath() + "/board/BoardDelete.aws?bidx="+bidx;
-			 * } }else if(location.equals("BoardReply.aws")){ String bidx =
-			 * request.getParameter("bidx");
-			 * 
-			 * BoardDao bd = new BoardDao(); BoardVo bv =
-			 * bd.boardSelectOne(Integer.parseInt(bidx));
-			 * 
-			 * int originbidx = bv.getOriginbidx(); int depth = bv.getDepth(); int level_ =
-			 * bv.getLevel_();
-			 * 
-			 * request.setAttribute("bidx", Integer.parseInt(bidx));
-			 * request.setAttribute("originbidx", originbidx); request.setAttribute("depth",
-			 * depth); request.setAttribute("level_", level_);
-			 * 
-			 * 
-			 * paramMethod="F"; url= "/board/BoardReply.jsp";
-			 */
 			
+			//그리고 나서 화면에 실행성공여부를 json 파일로 보여준다.
+			PrintWriter out =response.getWriter();
+			
+			String str = "{\"value\":\""+value+"\"}";
+			out.print(str);
 		}
 
 	}

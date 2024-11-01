@@ -105,7 +105,7 @@ display:inline-block;
 	color: inherit;
 	
 }
-.C span a:active, .C .on {
+.C span a:active {
     padding-top:5px;
     display:inline-block;
     width:30px;
